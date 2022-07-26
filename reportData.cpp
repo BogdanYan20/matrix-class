@@ -55,7 +55,7 @@ void reportData::setReferenceResult(const std::vector<std::vector<double>> &_ref
     this->referenceResult = _referenceResult;
 }
 
-void reportData::setOperationType(const std::string &_operationType)
+void reportData::setOperationType(const char *_operationType)
 {
     this->operationType = _operationType;
 }

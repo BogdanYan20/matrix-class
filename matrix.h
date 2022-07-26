@@ -27,6 +27,8 @@ public:
 
     matrix<T> &operator-=(const matrix<T> &_rhs);
 
+    matrix<T> &operator*=(const matrix<T> &_rhs);
+
     matrix<T> operator+(const matrix<T> &_rhs) const;
 
     matrix<T> operator-(const matrix<T> &_rhs) const;
@@ -51,6 +53,12 @@ private:
 
     unsigned rows;
     unsigned cols;
+
+    matrix<T> addition(const matrix<T> &_rhs) const;
+
+    matrix<T> subtraction(const matrix<T> &_rhs) const;
+
+    matrix<T> multiplication(const matrix<T> &_rhs) const;
 };
 
 template <typename T>
@@ -159,13 +167,7 @@ matrix<T> &matrix<T>::operator+=(const matrix<T> &_rhs)
         throw std::runtime_error("Matrices are incompatible");
     }
 
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
-        {
-            this->mat[i][j] += _rhs.mat[i][j];
-        }
-    }
+    this->operator=(this->addition(_rhs));
 
     return *this;
 }
@@ -178,13 +180,20 @@ matrix<T> &matrix<T>::operator-=(const matrix<T> &_rhs)
         throw std::runtime_error("Matrices are incompatible");
     }
 
-    for (size_t i = 0; i < this->rows; i++)
+    this->operator=(this->subtraction(_rhs));
+
+    return *this;
+}
+
+template <typename T>
+matrix<T> &matrix<T>::operator*=(const matrix<T> &_rhs)
+{
+    if (this->cols != _rhs.rows)
     {
-        for (size_t j = 0; j < this->cols; j++)
-        {
-            this->mat[i][j] -= _rhs.mat[i][j];
-        }
+        throw std::runtime_error("Matrices are incompatible");
     }
+
+    this->operator=(this->multiplication(_rhs));
 
     return *this;
 }
@@ -197,17 +206,7 @@ matrix<T> matrix<T>::operator+(const matrix<T> &_rhs) const
         throw std::runtime_error("Matrices are incompatible");
     }
 
-    matrix temp(this->rows, this->cols, 0);
-
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
-        {
-            temp.mat[i][j] = this->mat[i][j] + _rhs.mat[i][j];
-        }
-    }
-
-    return temp;
+    return this->addition(_rhs);
 }
 
 template <typename T>
@@ -218,17 +217,7 @@ matrix<T> matrix<T>::operator-(const matrix<T> &_rhs) const
         throw std::runtime_error("Matrices are incompatible");
     }
 
-    matrix temp(this->rows, this->cols, 0);
-
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
-        {
-            temp.mat[i][j] = this->mat[i][j] - _rhs.mat[i][j];
-        }
-    }
-
-    return temp;
+    return this->subtraction(_rhs);
 }
 
 template <typename T>
@@ -239,20 +228,7 @@ matrix<T> matrix<T>::operator*(const matrix<T> &_rhs) const
         throw std::runtime_error("Matrices are incompatible");
     }
 
-    matrix temp(this->rows, _rhs.cols, 0);
-
-    for (size_t i = 0; i < temp.rows; i++)
-    {
-        for (size_t j = 0; j < _rhs.cols; j++)
-        {
-            for (size_t k = 0; k < _rhs.rows; k++)
-            {
-                temp.mat[i][j] += this->mat[i][k] * _rhs.mat[k][j];
-            }
-        }
-    }
-
-    return temp;
+    return this->multiplication(_rhs);
 }
 
 template <typename T>
@@ -321,5 +297,56 @@ void matrix<T>::print() const
 
         std::cout << "\n";
     }
+}
+
+template <typename T>
+matrix<T> matrix<T>::addition(const matrix<T> &_rhs) const
+{
+    matrix temp(this->rows, this->cols, 0);
+
+    for (size_t i = 0; i < this->rows; i++)
+    {
+        for (size_t j = 0; j < this->cols; j++)
+        {
+            temp.mat[i][j] = this->mat[i][j] + _rhs.mat[i][j];
+        }
+    }
+
+    return temp;
+}
+
+template <typename T>
+matrix<T> matrix<T>::subtraction(const matrix<T> &_rhs) const
+{
+    matrix temp(this->rows, this->cols, 0);
+
+    for (size_t i = 0; i < this->rows; i++)
+    {
+        for (size_t j = 0; j < this->cols; j++)
+        {
+            temp.mat[i][j] = this->mat[i][j] - _rhs.mat[i][j];
+        }
+    }
+
+    return temp;
+}
+
+template <typename T>
+matrix<T> matrix<T>::multiplication(const matrix<T> &_rhs) const
+{
+    matrix temp(this->rows, _rhs.cols, 0);
+
+    for (size_t i = 0; i < temp.rows; i++)
+    {
+        for (size_t j = 0; j < _rhs.cols; j++)
+        {
+            for (size_t k = 0; k < _rhs.rows; k++)
+            {
+                temp.mat[i][j] += this->mat[i][k] * _rhs.mat[k][j];
+            }
+        }
+    }
+
+    return temp;
 }
  
