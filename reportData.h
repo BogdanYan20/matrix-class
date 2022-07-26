@@ -23,7 +23,7 @@ public:
 
     void setReferenceResult(const std::vector<std::vector<double>> &_referenceResult);
 
-    void setOperationType(const std::string &_operationType);
+    void setOperationType(const char *_operationType);
 
     std::pair<matrix<double>, matrix<double>> getTestData() const;
 
