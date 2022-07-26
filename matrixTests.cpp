@@ -19,14 +19,12 @@ void matrixTests::perform()
 {
     for (size_t testID = 0; testID < nTests; testID++)
     {
-        switch (this->random(1, 5))
+        switch (this->randomOperation())
         {
 
-        case 0: // +
+        case operation::ADDITION:
         {
             reportData testDetails;
-
-            std::string operationType = "addition";
 
             std::pair<matrix<double>, matrix<double>> testPair;
             std::pair<Eigen::MatrixXd, Eigen::MatrixXd> referencePair;
@@ -45,7 +43,7 @@ void matrixTests::perform()
                 testDetails.setTestResult(testResult);
                 testDetails.setReferenceResult(referenceResult);
 
-                testDetails.setOperationType(operationType);
+                testDetails.setOperationType("addition");
 
                 failReports.emplace(testID, testDetails);
             }
@@ -57,11 +55,9 @@ void matrixTests::perform()
             break;
         }
 
-        case 1: // -
+        case operation::SUBTRACTION:
         {
             reportData testDetails;
-
-            std::string operationType = "subtraction";
 
             std::pair<matrix<double>, matrix<double>> testPair;
             std::pair<Eigen::MatrixXd, Eigen::MatrixXd> referencePair;
@@ -80,7 +76,7 @@ void matrixTests::perform()
                 testDetails.setTestResult(testResult);
                 testDetails.setReferenceResult(referenceResult);
 
-                testDetails.setOperationType(operationType);
+                testDetails.setOperationType("subtraction");
 
                 failReports.emplace(testID, testDetails);
             }
@@ -92,11 +88,9 @@ void matrixTests::perform()
             break;
         }
 
-        case 2: // *
+        case operation::MULTIPLICATION:
         {
             reportData testDetails;
-
-            std::string operationType = "multiplication";
 
             std::pair<matrix<double>, matrix<double>> testPair;
             std::pair<Eigen::MatrixXd, Eigen::MatrixXd> referencePair;
@@ -115,7 +109,7 @@ void matrixTests::perform()
                 testDetails.setTestResult(testResult);
                 testDetails.setReferenceResult(referenceResult);
 
-                testDetails.setOperationType(operationType);
+                testDetails.setOperationType("multiplication");
 
                 failReports.emplace(testID, testDetails);
             }
@@ -127,11 +121,9 @@ void matrixTests::perform()
             break;
         }
 
-        case 3: // =
+        case operation::ASSIGNMENT:
         {
             reportData testDetails;
-
-            std::string operationType = "assignment";
 
             std::pair<matrix<double>, matrix<double>> testPair;
             std::pair<Eigen::MatrixXd, Eigen::MatrixXd> referencePair;
@@ -153,7 +145,7 @@ void matrixTests::perform()
                 testDetails.setTestResult(testResult);
                 testDetails.setReferenceResult(referenceResult);
 
-                testDetails.setOperationType(operationType);
+                testDetails.setOperationType("assignment");
 
                 failReports.emplace(testID, testDetails);
             }
@@ -165,11 +157,9 @@ void matrixTests::perform()
             break;
         }
 
-        case 4: // +=
+        case operation::ASSIGNMENT_ADDITION:
         {
             reportData testDetails;
-
-            std::string operationType = "assignment addition";
 
             std::pair<matrix<double>, matrix<double>> testPair;
             std::pair<Eigen::MatrixXd, Eigen::MatrixXd> referencePair;
@@ -191,7 +181,7 @@ void matrixTests::perform()
                 testDetails.setTestResult(testResult);
                 testDetails.setReferenceResult(referenceResult);
 
-                testDetails.setOperationType(operationType);
+                testDetails.setOperationType("assignment addition");
 
                 failReports.emplace(testID, testDetails);
             }
@@ -203,11 +193,9 @@ void matrixTests::perform()
             break;
         }
 
-        case 5: // -=
+        case operation::ASSIGNMENT_SUBTRACTION:
         {
             reportData testDetails;
-
-            std::string operationType = "assignment subtraction";
 
             std::pair<matrix<double>, matrix<double>> testPair;
             std::pair<Eigen::MatrixXd, Eigen::MatrixXd> referencePair;
@@ -229,7 +217,43 @@ void matrixTests::perform()
                 testDetails.setTestResult(testResult);
                 testDetails.setReferenceResult(referenceResult);
 
-                testDetails.setOperationType(operationType);
+                testDetails.setOperationType("assignment subtraction");
+
+                failReports.emplace(testID, testDetails);
+            }
+            else
+            {
+                this->successfulTests++;
+            }
+
+            break;
+        }
+
+        case operation::ASSIGNMENT_MULTIPLICATION:
+        {
+            reportData testDetails;
+
+            std::pair<matrix<double>, matrix<double>> testPair;
+            std::pair<Eigen::MatrixXd, Eigen::MatrixXd> referencePair;
+
+            this->prepareData(testPair, referencePair, true);
+
+            testPair.first *= testPair.second;
+            referencePair.first *= referencePair.second;
+
+            // Casting results to the same type, so that it is possible to compare them
+
+            std::vector<std::vector<double>> testResult = this->extractData(testPair.first);
+            std::vector<std::vector<double>> referenceResult = this->extractData(referencePair.first);
+
+            if (testResult != referenceResult)
+            {
+                testDetails.setTestPair(testPair);
+                testDetails.setReferencePair(referencePair);
+                testDetails.setTestResult(testResult);
+                testDetails.setReferenceResult(referenceResult);
+
+                testDetails.setOperationType("assignment multiplication");
 
                 failReports.emplace(testID, testDetails);
             }
@@ -402,6 +426,22 @@ double matrixTests::random(const double _min, const double _max)
 {
     std::uniform_real_distribution<double> distr(_min, _max);
     return distr(this->re);
+}
+
+matrixTests::operation matrixTests::randomOperation()
+{
+    switch (this->random(1, 7))
+    {
+    case 1: return operation::ADDITION;
+    case 2: return operation::SUBTRACTION;
+    case 3: return operation::MULTIPLICATION;
+    case 4: return operation::ASSIGNMENT;
+    case 5: return operation::ASSIGNMENT_ADDITION;
+    case 6: return operation::ASSIGNMENT_SUBTRACTION;
+    case 7: return operation::ASSIGNMENT_MULTIPLICATION;
+    }
+
+    // ? control reaches end of non-void function [-Wreturn-type]
 }
 
 std::vector<std::vector<double>> matrixTests::extractData(const matrix<double> &_data) const
