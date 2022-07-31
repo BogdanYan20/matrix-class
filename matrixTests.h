@@ -36,6 +36,8 @@ private:
 
     std::map<unsigned, reportData> failReports;
 
+    bool comapreResults(const std::vector<std::vector<double>> &_testResult, const std::vector<std::vector<double>> &_referenceResult) const;
+
     void showReport() const;
 
     void prepareData(std::pair<matrix<double>, matrix<double>> &_testPair, std::pair<Eigen::MatrixXd, Eigen::MatrixXd> &_referencePair, const bool _multiplicationFlag);

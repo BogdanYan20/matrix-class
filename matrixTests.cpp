@@ -36,7 +36,7 @@ void matrixTests::perform()
             std::vector<std::vector<double>> testResult = this->extractData(testPair.first + testPair.second);
             std::vector<std::vector<double>> referenceResult = this->extractData(referencePair.first + referencePair.second);
 
-            if (testResult != referenceResult)
+            if (!(this->comapreResults(testResult, referenceResult)))
             {
                 testDetails.setTestPair(testPair);
                 testDetails.setReferencePair(referencePair);
@@ -69,7 +69,7 @@ void matrixTests::perform()
             std::vector<std::vector<double>> testResult = this->extractData(testPair.first - testPair.second);
             std::vector<std::vector<double>> referenceResult = this->extractData(referencePair.first - referencePair.second);
 
-            if (testResult != referenceResult)
+            if (!(this->comapreResults(testResult, referenceResult)))
             {
                 testDetails.setTestPair(testPair);
                 testDetails.setReferencePair(referencePair);
@@ -102,7 +102,7 @@ void matrixTests::perform()
             std::vector<std::vector<double>> testResult = this->extractData(testPair.first * testPair.second);
             std::vector<std::vector<double>> referenceResult = this->extractData(referencePair.first * referencePair.second);
 
-            if (testResult != referenceResult)
+            if (!(this->comapreResults(testResult, referenceResult)))
             {
                 testDetails.setTestPair(testPair);
                 testDetails.setReferencePair(referencePair);
@@ -138,7 +138,7 @@ void matrixTests::perform()
             std::vector<std::vector<double>> testResult = this->extractData(testPair.first);
             std::vector<std::vector<double>> referenceResult = this->extractData(referencePair.first);
 
-            if (testResult != referenceResult)
+            if (!(this->comapreResults(testResult, referenceResult)))
             {
                 testDetails.setTestPair(testPair);
                 testDetails.setReferencePair(referencePair);
@@ -174,7 +174,7 @@ void matrixTests::perform()
             std::vector<std::vector<double>> testResult = this->extractData(testPair.first);
             std::vector<std::vector<double>> referenceResult = this->extractData(referencePair.first);
 
-            if (testResult != referenceResult)
+            if (!(this->comapreResults(testResult, referenceResult)))
             {
                 testDetails.setTestPair(testPair);
                 testDetails.setReferencePair(referencePair);
@@ -210,7 +210,7 @@ void matrixTests::perform()
             std::vector<std::vector<double>> testResult = this->extractData(testPair.first);
             std::vector<std::vector<double>> referenceResult = this->extractData(referencePair.first);
 
-            if (testResult != referenceResult)
+            if (!(this->comapreResults(testResult, referenceResult)))
             {
                 testDetails.setTestPair(testPair);
                 testDetails.setReferencePair(referencePair);
@@ -246,7 +246,7 @@ void matrixTests::perform()
             std::vector<std::vector<double>> testResult = this->extractData(testPair.first);
             std::vector<std::vector<double>> referenceResult = this->extractData(referencePair.first);
 
-            if (testResult != referenceResult)
+            if (!(this->comapreResults(testResult, referenceResult)))
             {
                 testDetails.setTestPair(testPair);
                 testDetails.setReferencePair(referencePair);
@@ -272,6 +272,40 @@ void matrixTests::perform()
     }
 
     showReport();
+}
+
+bool matrixTests::comapreResults(const std::vector<std::vector<double>> &_testResult, const std::vector<std::vector<double>> &_referenceResult) const
+{
+    if (_testResult.size() != _referenceResult.size())
+    {
+        return false;
+    }
+    else
+    {
+        for (size_t i = 0; i < _testResult.size(); i++)
+        {
+            if (_testResult[i].size() != _referenceResult[i].size())
+            {
+                return false;
+            }
+            else
+            {
+                for (size_t k = 0; k < _testResult[i].size(); k++)
+                {
+                    if (fabs(_testResult[i][k] - _referenceResult[i][k]) < .0001)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }                    
+                }                
+            }
+        }        
+    }
+
+    // ? control reaches end of non-void function [-Wreturn-type]
 }
 
 void matrixTests::showReport() const
