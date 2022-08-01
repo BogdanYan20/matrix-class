@@ -290,9 +290,9 @@ bool matrixTests::comapreResults(const std::vector<std::vector<double>> &_testRe
             }
             else
             {
-                for (size_t k = 0; k < _testResult[i].size(); k++)
+                for (size_t j = 0; j < _testResult[i].size(); j++)
                 {
-                    if (fabs(_testResult[i][k] - _referenceResult[i][k]) < .0001)
+                    if (fabs(_testResult[i][j] - _referenceResult[i][j]) < .0001)
                     {
                         return true;
                     }
