@@ -19,11 +19,24 @@ private:
 
     std::default_random_engine re;
 
+    enum operation
+    {
+        ADDITION,
+        SUBTRACTION,
+        MULTIPLICATION,
+        ASSIGNMENT,
+        ASSIGNMENT_ADDITION,
+        ASSIGNMENT_SUBTRACTION,
+        ASSIGNMENT_MULTIPLICATION
+    };
+
     size_t nTests;
 
     unsigned successfulTests;
 
     std::map<unsigned, reportData> failReports;
+
+    bool comapreResults(const std::vector<std::vector<double>> &_testResult, const std::vector<std::vector<double>> &_referenceResult) const;
 
     void showReport() const;
 
@@ -34,6 +47,8 @@ private:
     int random(const int _min, const int _max);
 
     double random(const double _min, const double _max);
+
+    operation randomOperation();
 
     std::vector<std::vector<double>> extractData(const matrix<double> &_data) const;
 
